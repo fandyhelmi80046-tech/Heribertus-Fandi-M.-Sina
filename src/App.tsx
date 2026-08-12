@@ -184,10 +184,19 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen transition-all duration-300 ${currentView === 'home' ? 'bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600' : 'bg-[#f8fafc]'} text-slate-800 selection:bg-blue-500 selection:text-white flex flex-col justify-between`} id="app-root">
+    <div className={`min-h-screen transition-all duration-300 ${currentView === 'home' ? 'bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-500 relative overflow-hidden' : 'bg-[#f8fafc]'} text-slate-800 selection:bg-fuchsia-500 selection:text-white flex flex-col justify-between`} id="app-root">
       
+      {/* Decorative Blur Blobs for Home View */}
+      {currentView === 'home' && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-cyan-400/40 blur-[120px] mix-blend-overlay animate-pulse" style={{ animationDuration: '4s' }} />
+          <div className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-orange-400/30 blur-[120px] mix-blend-overlay animate-pulse" style={{ animationDuration: '6s', animationDirection: 'reverse' }} />
+          <div className="absolute -bottom-[20%] left-[20%] w-[50%] h-[50%] rounded-full bg-blue-400/40 blur-[120px] mix-blend-overlay animate-pulse" style={{ animationDuration: '5s' }} />
+        </div>
+      )}
+
       {/* Dynamic Views container with standard transitions */}
-      <div className="flex-1">
+      <div className="flex-1 relative z-10">
         <AnimatePresence mode="wait">
           
           {/* VIEW A: LANDING PAGE */}
@@ -200,20 +209,20 @@ export default function App() {
               className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center min-h-[90vh]"
             >
               {/* Header Badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-blue-100 rounded-lg text-xs font-bold border border-white/20 mb-6 font-mono">
-                <Sparkles size={12} className="text-blue-300" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 text-white rounded-lg text-xs font-bold border border-white/30 mb-6 font-mono backdrop-blur-sm shadow-sm">
+                <Sparkles size={12} className="text-yellow-300" />
                 <span>VERSI SISTEM 2.4.0-PRO</span>
               </div>
 
               {/* Title Header */}
               <div className="text-center max-w-2xl mb-12">
-                <div className="inline-block bg-white text-blue-600 font-black text-2xl h-12 w-12 rounded-lg flex items-center justify-center mx-auto mb-3 shadow-md">
+                <div className="inline-block bg-white text-fuchsia-600 font-black text-3xl h-14 w-14 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-fuchsia-900/20">
                   5
                 </div>
-                <h1 className="text-4xl md:text-5xl font-extrabold font-sans tracking-tight text-white leading-none">
+                <h1 className="text-4xl md:text-6xl font-extrabold font-sans tracking-tight text-white leading-tight drop-shadow-sm">
                   CAT_SMPN5LR
                 </h1>
-                <p className="text-sm text-blue-100/90 mt-4 font-medium leading-relaxed border border-[#7c1515] rounded p-2">
+                <p className="text-sm md:text-base text-white/90 mt-5 font-medium leading-relaxed bg-black/10 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-lg">
                   Sistem Evaluasi Ujian Akhir Sekolah Mandiri yang dirancang khusus untuk memfasilitasi integrasi portal guru dan siswa SMP Negeri 5 Langke Rembong secara akurat, transparan, dan aman.
                 </p>
               </div>
@@ -325,9 +334,9 @@ export default function App() {
 
       {/* FOOTER BAR (HIDDEN DURING ACTIVE EXAM TO ENSURE NO CLUTTER) */}
       {currentView !== 'siswa' && (
-        <footer className={`${currentView === 'home' ? 'bg-transparent text-blue-100/80 border-t border-white/10' : 'bg-white border-t border-gray-200 text-gray-500'} py-6 text-center text-xs select-none print:hidden`}>
+        <footer className={`${currentView === 'home' ? 'bg-transparent text-white/80 border-t border-white/20' : 'bg-white border-t border-gray-200 text-gray-500'} py-6 text-center text-xs select-none print:hidden relative z-10`}>
           <p>© {new Date().getFullYear()} CAT_SMPN5LR • SMP Negeri 5 Langke Rembong. Hak Cipta Dilindungi Undang-Undang.</p>
-          <p className={`${currentView === 'home' ? 'text-blue-200/60' : 'text-gray-400'} text-[10px] mt-1`}>Dikembangkan untuk Sistem Penilaian Terstandarisasi & Profesional</p>
+          <p className={`${currentView === 'home' ? 'text-white/60' : 'text-gray-400'} text-[10px] mt-1`}>Dikembangkan untuk Sistem Penilaian Terstandarisasi & Profesional</p>
         </footer>
       )}
 

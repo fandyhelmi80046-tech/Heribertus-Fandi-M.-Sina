@@ -1276,7 +1276,10 @@ export default function PortalGuru({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans" id="teacher-portal-root">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50/80 via-purple-50/80 to-fuchsia-50/80 flex flex-col font-sans relative" id="teacher-portal-root">
+      {/* Decorative Background Glows */}
+      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-indigo-100/50 to-transparent pointer-events-none z-0" />
+      
       {toastMessage && (
         <div className="fixed top-4 right-4 z-[9999] max-w-md animate-bounce shadow-2xl">
           <div className="bg-slate-950 border border-slate-800 text-white px-4 py-3 rounded-lg flex items-center gap-3">
@@ -1285,11 +1288,11 @@ export default function PortalGuru({
           </div>
         </div>
       )}
-      {/* Navigation Topbar - Geometric Balance Light Style */}
-      <header className="bg-white text-slate-800 border-b border-slate-200/80 shadow-xs print:hidden">
+      {/* Navigation Topbar - Vibrant Glassmorphism */}
+      <header className="bg-white/70 backdrop-blur-xl text-slate-800 border-b border-fuchsia-200/50 shadow-sm sticky top-0 z-40 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-base shadow-sm">
+            <div className="h-9 w-9 bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white rounded-xl flex items-center justify-center font-bold text-base shadow-md shadow-fuchsia-500/20">
               5
             </div>
             <div>
@@ -1305,12 +1308,12 @@ export default function PortalGuru({
           </div>
           <div className="flex items-center justify-between md:justify-end gap-5 pt-3 md:pt-0 border-t md:border-t-0 border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-full bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
+              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-fuchsia-100 to-indigo-100 border border-fuchsia-200 text-fuchsia-700 flex items-center justify-center font-bold text-xs shadow-sm">
                 {activeTeacher.name.substring(0, 2).toUpperCase()}
               </div>
               <div className="text-left leading-none">
                 <p className="text-xs font-bold text-slate-900">{activeTeacher.name}</p>
-                <div className="mt-1 inline-block bg-slate-100 px-2 py-0.5 rounded text-[10px] font-mono text-slate-600 font-medium">
+                <div className="mt-1 inline-block bg-white/50 border border-indigo-100 px-2 py-0.5 rounded text-[10px] font-mono text-indigo-700 font-medium">
                   NIP: {activeTeacher.nip}
                 </div>
               </div>
@@ -1328,23 +1331,29 @@ export default function PortalGuru({
       </header>
 
       {/* Main Container */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
-        {/* Sidebar Nav - Geometric Balance Dark Sidebar theme style */}
-        <aside className="w-full lg:w-64 flex-shrink-0 print:hidden">
-          <div className="bg-[#0f172a] rounded-xl shadow-lg border border-slate-800 p-4 space-y-1.5">
-            <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 relative z-10">
+        {/* Sidebar Nav - Vibrant Colorful Sidebar theme style */}
+        <aside className="w-full lg:w-64 flex-shrink-0 print:hidden relative">
+          <div className="bg-gradient-to-b from-indigo-900 via-purple-900 to-fuchsia-950 rounded-2xl shadow-xl shadow-indigo-900/20 border border-fuchsia-500/20 p-3 lg:p-4 relative overflow-hidden">
+            {/* Colorful subtle blur inside sidebar */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-fuchsia-500/10 blur-2xl rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-500/20 blur-xl rounded-full pointer-events-none" />
+            
+            <p className="px-3 text-[10px] font-bold text-indigo-300/70 uppercase tracking-wider mb-2 lg:mb-3 relative z-10 hidden lg:block">Main Menu</p>
+
+            <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 hide-scrollbar relative z-10 [&>button]:flex-shrink-0 [&>button]:w-auto [&>button]:min-w-max [&>button]:lg:w-full">
 
             <button
               id="tab-dashboard"
               onClick={() => setActiveTab('dashboard')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'dashboard'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <BarChart3 size={18} className={activeTab === 'dashboard' ? 'text-blue-500' : 'text-slate-400'} />
+                <BarChart3 size={18} className={activeTab === 'dashboard' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                 <span>Dashboard Analisis</span>
               </div>
             </button>
@@ -1352,18 +1361,18 @@ export default function PortalGuru({
             <button
               id="tab-jadwal"
               onClick={() => setActiveTab('jadwal')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'jadwal'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Calendar size={18} className={activeTab === 'jadwal' ? 'text-blue-500' : 'text-slate-400'} />
+                <Calendar size={18} className={activeTab === 'jadwal' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                 <span>Jadwal Ujian</span>
               </div>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                activeTab === 'jadwal' ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-300'
+                activeTab === 'jadwal' ? 'bg-fuchsia-500 text-white' : 'bg-black/20 text-indigo-300'
               }`}>
                 {exams.length}
               </span>
@@ -1377,14 +1386,14 @@ export default function PortalGuru({
                   setSelectedExamId(exams[0].id);
                 }
               }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'soal'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <BookOpen size={18} className={activeTab === 'soal' ? 'text-blue-500' : 'text-slate-400'} />
+                <BookOpen size={18} className={activeTab === 'soal' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                 <span>Bank Soal</span>
               </div>
             </button>
@@ -1392,14 +1401,14 @@ export default function PortalGuru({
             <button
               id="tab-koreksi"
               onClick={() => setActiveTab('koreksi')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'koreksi'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <CheckCircle size={18} className={activeTab === 'koreksi' ? 'text-blue-500' : 'text-slate-400'} />
+                <CheckCircle size={18} className={activeTab === 'koreksi' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                 <span>Koreksi Essay</span>
               </div>
               {sessionsNeedingGrading.length > 0 && (
@@ -1412,14 +1421,14 @@ export default function PortalGuru({
             <button
               id="tab-hasil"
               onClick={() => setActiveTab('hasil')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'hasil'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Printer size={18} className={activeTab === 'hasil' ? 'text-blue-500' : 'text-slate-400'} />
+                <Printer size={18} className={activeTab === 'hasil' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                 <span>Cetak Hasil</span>
               </div>
             </button>
@@ -1427,14 +1436,14 @@ export default function PortalGuru({
             <button
               id="tab-cheat"
               onClick={() => setActiveTab('cheat')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                 activeTab === 'cheat'
-                  ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <AlertTriangle size={18} className={activeTab === 'cheat' ? 'text-rose-500' : 'text-slate-400'} />
+                <AlertTriangle size={18} className={activeTab === 'cheat' ? 'text-rose-400' : 'text-indigo-300/70'} />
                 <span>Sistem Anti-Curang</span>
               </div>
               {cheatLogs.length > 0 && (
@@ -1449,17 +1458,17 @@ export default function PortalGuru({
                 <button
                   id="tab-admin"
                   onClick={() => setActiveTab('admin')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                     activeTab === 'admin'
-                      ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                      ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                      : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <ShieldCheck size={18} className={activeTab === 'admin' ? 'text-blue-500' : 'text-slate-400'} />
+                    <ShieldCheck size={18} className={activeTab === 'admin' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                     <span>Panel Admin</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-extrabold uppercase tracking-wider font-mono">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-fuchsia-600 text-white font-extrabold uppercase tracking-wider font-mono shadow-sm">
                     Admin
                   </span>
                 </button>
@@ -1467,30 +1476,34 @@ export default function PortalGuru({
                 <button
                   id="tab-kapasitas"
                   onClick={() => setActiveTab('kapasitas')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all relative z-10 ${
                     activeTab === 'kapasitas'
-                      ? 'bg-blue-500/10 text-white border-l-4 border-blue-500 rounded-l-none'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                      ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                      : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <HardDrive size={18} className={activeTab === 'kapasitas' ? 'text-blue-500' : 'text-slate-400'} />
+                    <HardDrive size={18} className={activeTab === 'kapasitas' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
                     <span>Kapasitas Storage</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-extrabold uppercase tracking-wider font-mono border border-emerald-500/30">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/30 text-indigo-200 font-extrabold uppercase tracking-wider font-mono border border-indigo-400/30">
                     Quota
                   </span>
                 </button>
               </>
             )}
+            </div>
           </div>
-          <div className="mt-4 px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-slate-500 tracking-wider block uppercase">VERSI SISTEM 2.4.0-PRO</span>
+          <div className="hidden lg:block mt-4 px-4 py-3 bg-white/40 backdrop-blur-md border border-white/60 shadow-sm rounded-xl text-center relative z-10">
+            <span className="text-[9px] font-bold text-fuchsia-700 tracking-wider block uppercase">VERSI SISTEM 2.4.0-PRO</span>
           </div>
         </aside>
 
         {/* Content Container - crisp layout matching the Design card */}
-        <main className="flex-1 bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-200 p-6 sm:p-8">
+        <main className="flex-1 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-indigo-900/10 border border-white p-6 sm:p-8 relative z-10 overflow-hidden">
+          
+          {/* Subtle decoration inside main container */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-fuchsia-50/50 blur-3xl rounded-full pointer-events-none -z-10" />
           
           {/* TAB 0: DASHBOARD & ANALISIS */}
           {activeTab === 'dashboard' && (
@@ -1504,43 +1517,43 @@ export default function PortalGuru({
 
               {/* 4 Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex items-center gap-4">
-                  <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
-                    <Calendar size={18} />
+                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-5 shadow-sm shadow-indigo-100/50 flex items-center gap-4 hover:shadow-md transition-shadow">
+                  <div className="p-3 bg-gradient-to-br from-indigo-500 to-blue-500 text-white rounded-xl shadow-inner">
+                    <Calendar size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Ujian</p>
-                    <p className="text-xl font-black text-slate-900 mt-0.5">{exams.length}</p>
+                    <p className="text-[10px] font-bold text-indigo-600/70 uppercase tracking-wider">Total Ujian</p>
+                    <p className="text-2xl font-black text-indigo-900 mt-0.5">{exams.length}</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex items-center gap-4">
-                  <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg">
-                    <Users size={18} />
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-5 shadow-sm shadow-emerald-100/50 flex items-center gap-4 hover:shadow-md transition-shadow">
+                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-xl shadow-inner">
+                    <Users size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Siswa Berpartisipasi</p>
-                    <p className="text-xl font-black text-slate-900 mt-0.5">{studentSessions.filter(s => s.isSubmitted).length}</p>
+                    <p className="text-[10px] font-bold text-emerald-700/70 uppercase tracking-wider">Siswa Berpartisipasi</p>
+                    <p className="text-2xl font-black text-emerald-900 mt-0.5">{studentSessions.filter(s => s.isSubmitted).length}</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex items-center gap-4">
-                  <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg">
-                    <GraduationCap size={18} />
+                <div className="bg-gradient-to-br from-fuchsia-50 to-pink-50 border border-fuchsia-100 rounded-2xl p-5 shadow-sm shadow-fuchsia-100/50 flex items-center gap-4 hover:shadow-md transition-shadow">
+                  <div className="p-3 bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white rounded-xl shadow-inner">
+                    <GraduationCap size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rerata Nilai</p>
-                    <p className="text-xl font-black text-slate-900 mt-0.5">{overallStats.avgScore}</p>
+                    <p className="text-[10px] font-bold text-fuchsia-700/70 uppercase tracking-wider">Rerata Nilai</p>
+                    <p className="text-2xl font-black text-fuchsia-900 mt-0.5">{overallStats.avgScore}</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex items-center gap-4">
-                  <div className="p-2.5 bg-violet-50 text-violet-600 rounded-lg">
-                    <CheckCircle size={18} />
+                <div className="bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 rounded-2xl p-5 shadow-sm shadow-purple-100/50 flex items-center gap-4 hover:shadow-md transition-shadow">
+                  <div className="p-3 bg-gradient-to-br from-purple-500 to-violet-500 text-white rounded-xl shadow-inner">
+                    <CheckCircle size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rasio Ketuntasan</p>
-                    <p className="text-xl font-black text-slate-900 mt-0.5">{overallStats.tuntasPercent}%</p>
+                    <p className="text-[10px] font-bold text-purple-700/70 uppercase tracking-wider">Rasio Ketuntasan</p>
+                    <p className="text-2xl font-black text-purple-900 mt-0.5">{overallStats.tuntasPercent}%</p>
                   </div>
                 </div>
               </div>
@@ -1555,13 +1568,15 @@ export default function PortalGuru({
               {/* Charts Row 1 */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Chart 1: Rerata Nilai vs KKM */}
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col justify-between">
+                <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-5 shadow-lg shadow-slate-200/40 flex flex-col justify-between">
                   <div>
                     <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                      <BarChart3 size={16} className="text-blue-500" />
-                      Rerata Nilai vs Standar KKM per Mata Pelajaran
+                      <div className="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-md">
+                        <BarChart3 size={16} />
+                      </div>
+                      Rerata Nilai vs Standar KKM
                     </h3>
-                    <p className="text-xs text-slate-400 mb-4">Membandingkan rata-rata nilai perolehan siswa dengan standar KKM yang ditetapkan.</p>
+                    <p className="text-xs text-slate-500 mb-4 ml-8">Membandingkan rata-rata nilai perolehan siswa dengan standar KKM.</p>
                   </div>
                   
                   <div className="h-72 w-full mt-2">
@@ -1596,13 +1611,15 @@ export default function PortalGuru({
                 </div>
 
                 {/* Chart 2: Persentase Ketuntasan Siswa */}
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col justify-between">
+                <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-5 shadow-lg shadow-slate-200/40 flex flex-col justify-between">
                   <div>
                     <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                      <TrendingUp size={16} className="text-emerald-500" />
-                      Persentase Ketuntasan per Mata Pelajaran (%)
+                      <div className="p-1.5 bg-emerald-100 text-emerald-600 rounded-md">
+                        <TrendingUp size={16} />
+                      </div>
+                      Persentase Ketuntasan
                     </h3>
-                    <p className="text-xs text-slate-400 mb-4">Rasio siswa yang berhasil tuntas melewati ambang batas KKM pelajaran.</p>
+                    <p className="text-xs text-slate-500 mb-4 ml-8">Rasio siswa yang berhasil tuntas melewati ambang batas KKM.</p>
                   </div>
                   
                   <div className="h-72 w-full mt-2">
