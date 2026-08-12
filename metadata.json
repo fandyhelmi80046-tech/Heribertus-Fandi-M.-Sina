@@ -1,0 +1,6 @@
+{
+  "name": "CAT_SMPN5LR",
+  "description": "Aplikasi Computer Assisted Test (CAT) Profesional untuk SMPN 5 Lahei Barat. Dilengkapi portal guru (input 5 jenis soal, jadwal, KKM, koreksi essay, cetak hasil) dan portal siswa dengan sistem deteksi kecurangan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

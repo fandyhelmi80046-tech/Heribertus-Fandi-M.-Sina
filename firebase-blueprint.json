@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "exams": {
+      "title": "Exams",
+      "description": "CAT Examination packages with questions",
+      "properties": {
+        "id": { "type": "string" },
+        "subject": { "type": "string" },
+        "className": { "type": "string" },
+        "durationMinutes": { "type": "number" },
+        "kkm": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "subject", "className", "durationMinutes", "kkm", "isActive"]
+    },
+    "studentSessions": {
+      "title": "Student Sessions",
+      "description": "Student exam sessions and submissions",
+      "properties": {
+        "id": { "type": "string" },
+        "studentName": { "type": "string" },
+        "className": { "type": "string" },
+        "examId": { "type": "string" },
+        "subject": { "type": "string" },
+        "isSubmitted": { "type": "boolean" },
+        "isCheated": { "type": "boolean" },
+        "autoScore": { "type": "number" },
+        "finalScore": { "type": "number" }
+      },
+      "required": ["id", "studentName", "className", "examId", "subject", "isSubmitted"]
+    },
+    "teachers": {
+      "title": "Teachers",
+      "description": "Teacher profile data",
+      "properties": {
+        "nip": { "type": "string" },
+        "name": { "type": "string" },
+        "isAdmin": { "type": "boolean" }
+      },
+      "required": ["nip", "name"]
+    },
+    "cheatLogs": {
+      "title": "Cheat Logs",
+      "description": "Proctoring violation logs",
+      "properties": {
+        "id": { "type": "string" },
+        "studentName": { "type": "string" },
+        "className": { "type": "string" },
+        "subject": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "required": ["id", "studentName", "className", "subject", "timestamp", "message"]
+    },
+    "classes": {
+      "title": "Classes",
+      "description": "School classes list",
+      "properties": {
+        "className": { "type": "string" }
+      },
+      "required": ["className"]
+    }
+  }
+}
