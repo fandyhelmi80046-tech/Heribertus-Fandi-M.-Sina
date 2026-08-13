@@ -10,8 +10,9 @@ import {
   doc, 
   setDoc, 
   getDocs, 
-  deleteDoc, 
-  writeBatch
+  deleteDoc,
+  onSnapshot,
+  getDocFromServer
 } from 'firebase/firestore';
 import { Exam, StudentSession, Teacher, CheatLog } from '../types';
 
@@ -32,6 +33,38 @@ const firebaseConfig = {
 let db: any = null;
 let isFirebaseEnabled = false;
 
+export enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+export interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+  }
+}
+
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: null,
+      email: null,
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+}
+
 // Check if we have at least projectId to initialize
 if (firebaseConfig.projectId && firebaseConfig.apiKey) {
   try {
@@ -48,7 +81,87 @@ if (firebaseConfig.projectId && firebaseConfig.apiKey) {
   console.log("No Firebase config found. Running in Local Storage Mode with Firestore-ready interface.");
 }
 
-export { isFirebaseEnabled };
+export { isFirebaseEnabled, db };
+
+// Validate Connection to Firestore
+async function testConnection() {
+  if (!isFirebaseEnabled || !db) return;
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+    console.log("Firestore connection verified successfully.");
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.error("Please check your Firebase configuration.");
+    }
+  }
+}
+testConnection();
+
+// REAL-TIME SUBSCRIBERS
+export function dbSubscribeExams(callback: (exams: Exam[]) => void): () => void {
+  if (!isFirebaseEnabled || !db) return () => {};
+  return onSnapshot(collection(db, 'exams'), (snapshot) => {
+    const exams: Exam[] = [];
+    snapshot.forEach((docSnap) => {
+      exams.push(docSnap.data() as Exam);
+    });
+    callback(exams);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.GET, 'exams');
+  });
+}
+
+export function dbSubscribeStudentSessions(callback: (sessions: StudentSession[]) => void): () => void {
+  if (!isFirebaseEnabled || !db) return () => {};
+  return onSnapshot(collection(db, 'studentSessions'), (snapshot) => {
+    const sessions: StudentSession[] = [];
+    snapshot.forEach((docSnap) => {
+      sessions.push(docSnap.data() as StudentSession);
+    });
+    callback(sessions);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.GET, 'studentSessions');
+  });
+}
+
+export function dbSubscribeTeachers(callback: (teachers: Teacher[]) => void): () => void {
+  if (!isFirebaseEnabled || !db) return () => {};
+  return onSnapshot(collection(db, 'teachers'), (snapshot) => {
+    const teachers: Teacher[] = [];
+    snapshot.forEach((docSnap) => {
+      teachers.push(docSnap.data() as Teacher);
+    });
+    callback(teachers);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.GET, 'teachers');
+  });
+}
+
+export function dbSubscribeCheatLogs(callback: (logs: CheatLog[]) => void): () => void {
+  if (!isFirebaseEnabled || !db) return () => {};
+  return onSnapshot(collection(db, 'cheatLogs'), (snapshot) => {
+    const logs: CheatLog[] = [];
+    snapshot.forEach((docSnap) => {
+      logs.push(docSnap.data() as CheatLog);
+    });
+    callback(logs);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.GET, 'cheatLogs');
+  });
+}
+
+export function dbSubscribeClasses(callback: (classes: string[]) => void): () => void {
+  if (!isFirebaseEnabled || !db) return () => {};
+  return onSnapshot(collection(db, 'classes'), (snapshot) => {
+    const classes: string[] = [];
+    snapshot.forEach((docSnap) => {
+      classes.push(docSnap.data().className);
+    });
+    callback(classes);
+  }, (error) => {
+    handleFirestoreError(error, OperationType.GET, 'classes');
+  });
+}
 
 // Helper to check if a collection is empty and seed it
 export async function dbGetExams(): Promise<Exam[] | null> {
@@ -62,7 +175,7 @@ export async function dbGetExams(): Promise<Exam[] | null> {
     });
     return exams;
   } catch (error) {
-    console.error("Firestore dbGetExams error, falling back:", error);
+    handleFirestoreError(error, OperationType.GET, 'exams');
     return null;
   }
 }
@@ -83,7 +196,7 @@ export async function dbSaveExams(exams: Exam[]): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbSaveExams error:", error);
+    handleFirestoreError(error, OperationType.WRITE, 'exams');
     return false;
   }
 }
@@ -94,7 +207,7 @@ export async function dbDeleteExam(examId: string): Promise<boolean> {
     await deleteDoc(doc(db, 'exams', examId));
     return true;
   } catch (error) {
-    console.error("Firestore dbDeleteExam error:", error);
+    handleFirestoreError(error, OperationType.DELETE, `exams/${examId}`);
     return false;
   }
 }
@@ -110,7 +223,7 @@ export async function dbGetStudentSessions(): Promise<StudentSession[] | null> {
     });
     return sessions;
   } catch (error) {
-    console.error("Firestore dbGetStudentSessions error:", error);
+    handleFirestoreError(error, OperationType.GET, 'studentSessions');
     return null;
   }
 }
@@ -131,7 +244,7 @@ export async function dbSaveStudentSessions(sessions: StudentSession[]): Promise
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbSaveStudentSessions error:", error);
+    handleFirestoreError(error, OperationType.WRITE, 'studentSessions');
     return false;
   }
 }
@@ -142,7 +255,7 @@ export async function dbDeleteStudentSession(sessionId: string): Promise<boolean
     await deleteDoc(doc(db, 'studentSessions', sessionId));
     return true;
   } catch (error) {
-    console.error("Firestore dbDeleteStudentSession error:", error);
+    handleFirestoreError(error, OperationType.DELETE, `studentSessions/${sessionId}`);
     return false;
   }
 }
@@ -158,7 +271,7 @@ export async function dbGetTeachers(): Promise<Teacher[] | null> {
     });
     return teachers;
   } catch (error) {
-    console.error("Firestore dbGetTeachers error:", error);
+    handleFirestoreError(error, OperationType.GET, 'teachers');
     return null;
   }
 }
@@ -179,7 +292,7 @@ export async function dbSaveTeachers(teachers: Teacher[]): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbSaveTeachers error:", error);
+    handleFirestoreError(error, OperationType.WRITE, 'teachers');
     return false;
   }
 }
@@ -190,7 +303,7 @@ export async function dbDeleteTeacher(nip: string): Promise<boolean> {
     await deleteDoc(doc(db, 'teachers', nip));
     return true;
   } catch (error) {
-    console.error("Firestore dbDeleteTeacher error:", error);
+    handleFirestoreError(error, OperationType.DELETE, `teachers/${nip}`);
     return false;
   }
 }
@@ -206,7 +319,7 @@ export async function dbGetCheatLogs(): Promise<CheatLog[] | null> {
     });
     return logs;
   } catch (error) {
-    console.error("Firestore dbGetCheatLogs error:", error);
+    handleFirestoreError(error, OperationType.GET, 'cheatLogs');
     return null;
   }
 }
@@ -227,7 +340,7 @@ export async function dbSaveCheatLogs(logs: CheatLog[]): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbSaveCheatLogs error:", error);
+    handleFirestoreError(error, OperationType.WRITE, 'cheatLogs');
     return false;
   }
 }
@@ -241,7 +354,7 @@ export async function dbClearCheatLogs(): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbClearCheatLogs error:", error);
+    handleFirestoreError(error, OperationType.DELETE, 'cheatLogs');
     return false;
   }
 }
@@ -257,7 +370,7 @@ export async function dbGetClasses(): Promise<string[] | null> {
     });
     return classes;
   } catch (error) {
-    console.error("Firestore dbGetClasses error:", error);
+    handleFirestoreError(error, OperationType.GET, 'classes');
     return null;
   }
 }
@@ -277,7 +390,7 @@ export async function dbSaveClasses(classes: string[]): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbSaveClasses error:", error);
+    handleFirestoreError(error, OperationType.WRITE, 'classes');
     return false;
   }
 }
@@ -288,7 +401,7 @@ export async function dbDeleteClass(className: string): Promise<boolean> {
     await deleteDoc(doc(db, 'classes', className));
     return true;
   } catch (error) {
-    console.error("Firestore dbDeleteClass error:", error);
+    handleFirestoreError(error, OperationType.DELETE, `classes/${className}`);
     return false;
   }
 }
@@ -305,7 +418,8 @@ export async function dbClearAllData(): Promise<boolean> {
     }
     return true;
   } catch (error) {
-    console.error("Firestore dbClearAllData error:", error);
+    handleFirestoreError(error, OperationType.DELETE, 'all');
     return false;
   }
 }
+

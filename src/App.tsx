@@ -15,11 +15,11 @@ import PortalGuru from './components/PortalGuru';
 import PortalSiswa from './components/PortalSiswa';
 import {
   isFirebaseEnabled,
-  dbGetExams, dbSaveExams,
-  dbGetStudentSessions, dbSaveStudentSessions,
-  dbGetTeachers, dbSaveTeachers,
-  dbGetCheatLogs, dbSaveCheatLogs,
-  dbGetClasses, dbSaveClasses
+  dbGetExams, dbSaveExams, dbSubscribeExams,
+  dbGetStudentSessions, dbSaveStudentSessions, dbSubscribeStudentSessions,
+  dbGetTeachers, dbSaveTeachers, dbSubscribeTeachers,
+  dbGetCheatLogs, dbSaveCheatLogs, dbSubscribeCheatLogs,
+  dbGetClasses, dbSaveClasses, dbSubscribeClasses
 } from './lib/firebase';
 
 export default function App() {
@@ -33,8 +33,14 @@ export default function App() {
   // Current active view: 'home' | 'siswa' | 'guru'
   const [currentView, setCurrentView] = useState<'home' | 'siswa' | 'guru'>('home');
 
-  // Load master data on mount
+  // Load master data on mount & subscribe to real-time changes
   useEffect(() => {
+    let unsubExams: () => void = () => {};
+    let unsubSessions: () => void = () => {};
+    let unsubTeachers: () => void = () => {};
+    let unsubCheatLogs: () => void = () => {};
+    let unsubClasses: () => void = () => {};
+
     async function loadData() {
       // 1. Classes
       let finalClasses = SCHOOL_CLASSES;
@@ -132,9 +138,51 @@ export default function App() {
       setCheatLogs(finalCheatLogs);
       localStorage.setItem('cheat_logs', JSON.stringify(finalCheatLogs));
       localStorage.setItem('cheat_logs_initialized', 'true');
+
+      // Attach Real-Time Firestore listeners
+      if (isFirebaseEnabled) {
+        unsubExams = dbSubscribeExams((updatedExams) => {
+          if (updatedExams && updatedExams.length > 0) {
+            setExams(updatedExams);
+            localStorage.setItem('exams_data', JSON.stringify(updatedExams));
+          }
+        });
+        unsubSessions = dbSubscribeStudentSessions((updatedSessions) => {
+          if (updatedSessions) {
+            setStudentSessions(updatedSessions);
+            localStorage.setItem('student_sessions', JSON.stringify(updatedSessions));
+          }
+        });
+        unsubTeachers = dbSubscribeTeachers((updatedTeachers) => {
+          if (updatedTeachers && updatedTeachers.length > 0) {
+            setTeachers(updatedTeachers);
+            localStorage.setItem('teachers_data', JSON.stringify(updatedTeachers));
+          }
+        });
+        unsubCheatLogs = dbSubscribeCheatLogs((updatedLogs) => {
+          if (updatedLogs) {
+            setCheatLogs(updatedLogs);
+            localStorage.setItem('cheat_logs', JSON.stringify(updatedLogs));
+          }
+        });
+        unsubClasses = dbSubscribeClasses((updatedClasses) => {
+          if (updatedClasses && updatedClasses.length > 0) {
+            setClasses(updatedClasses);
+            localStorage.setItem('classes_data', JSON.stringify(updatedClasses));
+          }
+        });
+      }
     }
 
     loadData();
+
+    return () => {
+      unsubExams();
+      unsubSessions();
+      unsubTeachers();
+      unsubCheatLogs();
+      unsubClasses();
+    };
   }, []);
 
   // Sync back to localStorage & Firestore on any state modification

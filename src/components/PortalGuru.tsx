@@ -16,7 +16,6 @@ import {
   Tooltip, Legend, PieChart, Pie, Cell
 } from 'recharts';
 import { Exam, Question, QuestionType, StudentSession, Teacher, CheatLog, MatchingPair } from '../types';
-import ClassAnalyticsCharts from './ClassAnalyticsCharts';
 import StorageCapacityCard from './StorageCapacityCard';
 import html2pdf from 'html2pdf.js';
 import { dbDeleteExam, dbClearCheatLogs, dbDeleteStudentSession, dbDeleteTeacher, dbDeleteClass, dbClearAllData } from '../lib/firebase';
@@ -1354,7 +1353,7 @@ export default function PortalGuru({
             >
               <div className="flex items-center gap-2.5">
                 <BarChart3 size={18} className={activeTab === 'dashboard' ? 'text-fuchsia-400' : 'text-indigo-300/70'} />
-                <span>Dashboard Analisis</span>
+                <span>Dashboard Guru</span>
               </div>
             </button>
             
@@ -1505,13 +1504,13 @@ export default function PortalGuru({
           {/* Subtle decoration inside main container */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-fuchsia-50/50 blur-3xl rounded-full pointer-events-none -z-10" />
           
-          {/* TAB 0: DASHBOARD & ANALISIS */}
+          {/* TAB 0: DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6 animate-fade-in" id="teacher-view-dashboard">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-4">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 font-sans">Dashboard Analisis Evaluasi</h2>
-                  <p className="text-sm text-slate-500">Pemantauan visual waktu-nyata terhadap ketuntasan belajar dan capaian kompetensi siswa.</p>
+                  <h2 className="text-lg font-extrabold text-slate-900 font-sans">Dashboard Guru</h2>
+                  <p className="text-sm text-slate-500">Pemantauan dan pengelolaan aktivitas ujian sekolah secara langsung.</p>
                 </div>
               </div>
 
@@ -1554,234 +1553,6 @@ export default function PortalGuru({
                   <div>
                     <p className="text-[10px] font-bold text-purple-700/70 uppercase tracking-wider">Rasio Ketuntasan</p>
                     <p className="text-2xl font-black text-purple-900 mt-0.5">{overallStats.tuntasPercent}%</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Class Evaluation Analytics Widget */}
-              <ClassAnalyticsCharts 
-                exams={exams} 
-                studentSessions={studentSessions} 
-                classes={classes} 
-              />
-
-              {/* Charts Row 1 */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Chart 1: Rerata Nilai vs KKM */}
-                <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-5 shadow-lg shadow-slate-200/40 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                      <div className="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-md">
-                        <BarChart3 size={16} />
-                      </div>
-                      Rerata Nilai vs Standar KKM
-                    </h3>
-                    <p className="text-xs text-slate-500 mb-4 ml-8">Membandingkan rata-rata nilai perolehan siswa dengan standar KKM.</p>
-                  </div>
-                  
-                  <div className="h-72 w-full mt-2">
-                    {subjectStats.length === 0 ? (
-                      <div className="h-full flex items-center justify-center text-slate-400 text-xs">Belum ada data nilai ujian masuk.</div>
-                    ) : (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={subjectStats}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis 
-                            dataKey="subject" 
-                            stroke="#94a3b8" 
-                            fontSize={10} 
-                            tickLine={false}
-                            tickFormatter={(tick) => tick.length > 15 ? `${tick.substring(0, 15)}...` : tick}
-                          />
-                          <YAxis stroke="#94a3b8" fontSize={10} domain={[0, 100]} tickLine={false} />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: 'none', color: '#fff', fontSize: '11px' }}
-                            itemStyle={{ color: '#fff' }}
-                          />
-                          <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
-                          <Bar name="Rerata Nilai" dataKey="avgScore" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={24} />
-                          <Bar name="KKM Target" dataKey="kkm" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={12} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-                </div>
-
-                {/* Chart 2: Persentase Ketuntasan Siswa */}
-                <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-5 shadow-lg shadow-slate-200/40 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                      <div className="p-1.5 bg-emerald-100 text-emerald-600 rounded-md">
-                        <TrendingUp size={16} />
-                      </div>
-                      Persentase Ketuntasan
-                    </h3>
-                    <p className="text-xs text-slate-500 mb-4 ml-8">Rasio siswa yang berhasil tuntas melewati ambang batas KKM.</p>
-                  </div>
-                  
-                  <div className="h-72 w-full mt-2">
-                    {subjectStats.length === 0 ? (
-                      <div className="h-full flex items-center justify-center text-slate-400 text-xs">Belum ada data kelulusan ujian masuk.</div>
-                    ) : (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={subjectStats}
-                          layout="vertical"
-                          margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                          <XAxis type="number" stroke="#94a3b8" fontSize={10} domain={[0, 100]} tickLine={false} />
-                          <YAxis 
-                            dataKey="subject" 
-                            type="category" 
-                            stroke="#94a3b8" 
-                            fontSize={10} 
-                            tickLine={false}
-                            width={100}
-                            tickFormatter={(tick) => tick.length > 12 ? `${tick.substring(0, 12)}...` : tick}
-                          />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: 'none', color: '#fff', fontSize: '11px' }}
-                            itemStyle={{ color: '#fff' }}
-                            formatter={(value) => [`${value}%`, 'Persentase Ketuntasan']}
-                          />
-                          <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
-                          <Bar name="Persentase Ketuntasan" dataKey="passRate" fill="#10b981" radius={[0, 4, 4, 0]} barSize={16} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Row 2: Leaderboard & Overall Pie Chart */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Overall Passing Status Pie Chart */}
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] lg:col-span-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                      <LucidePieChart size={16} className="text-indigo-500" />
-                      Status Kelulusan Kolektif Sekolah
-                    </h3>
-                    <p className="text-xs text-slate-400 mb-4">Distribusi total kelulusan siswa seluruh kelas.</p>
-                  </div>
-                  
-                  <div className="h-56 w-full flex items-center justify-center relative">
-                    {overallStats.total === 0 ? (
-                      <div className="text-slate-400 text-xs">Belum ada siswa yang mengumpulkan jawaban.</div>
-                    ) : (
-                      <>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={[
-                                { name: 'Tuntas', value: overallStats.tuntas },
-                                { name: 'Belum Tuntas', value: overallStats.belumTuntas }
-                              ]}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={60}
-                              outerRadius={75}
-                              paddingAngle={4}
-                              dataKey="value"
-                            >
-                              <Cell fill="#10b981" />
-                              <Cell fill="#f43f5e" />
-                            </Pie>
-                            <Tooltip formatter={(value) => [`${value} Siswa`]} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                        <div className="absolute text-center leading-tight">
-                          <p className="text-2xl font-black text-slate-900">{overallStats.tuntasPercent}%</p>
-                          <p className="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Tuntas</p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  
-                  {overallStats.total > 0 && (
-                    <div className="flex justify-center gap-6 text-[11px] font-bold pt-3 border-t border-slate-100">
-                      <span className="flex items-center gap-1.5 text-emerald-600">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        Tuntas ({overallStats.tuntas})
-                      </span>
-                      <span className="flex items-center gap-1.5 text-rose-600">
-                        <span className="h-2 w-2 rounded-full bg-rose-500"></span>
-                        Belum Tuntas ({overallStats.belumTuntas})
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Top Students */}
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] lg:col-span-1">
-                  <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                    <CheckCircle size={16} className="text-emerald-500" />
-                    Siswa Capaian Tertinggi (Top 5)
-                  </h3>
-                  <p className="text-xs text-slate-400 mb-4">Siswa dengan perolehan skor terbaik pada ujian yang telah diselesaikan.</p>
-                  
-                  <div className="space-y-3">
-                    {studentLeaderboard.top.length === 0 ? (
-                      <p className="text-xs text-slate-400 py-6 text-center">Belum ada siswa yang dinilai.</p>
-                    ) : (
-                      studentLeaderboard.top.map((session, idx) => (
-                        <div key={session.id} className="flex items-center justify-between p-2.5 bg-slate-50/50 rounded-lg border border-slate-100">
-                          <div className="flex items-center gap-2.5">
-                            <span className="h-5 w-5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full flex items-center justify-center border border-emerald-200">
-                              {idx + 1}
-                            </span>
-                            <div>
-                              <p className="text-xs font-bold text-slate-950 leading-tight">{session.studentName}</p>
-                              <p className="text-[10px] text-slate-400 font-semibold">{session.className} • {session.subject}</p>
-                            </div>
-                          </div>
-                          <span className="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
-                            {session.finalScore}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-
-                {/* Students needing support */}
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] lg:col-span-1">
-                  <h3 className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                    <AlertCircle size={16} className="text-amber-500" />
-                    Siswa Perlu Bimbingan (Bawah KKM)
-                  </h3>
-                  <p className="text-xs text-slate-400 mb-4">Siswa dengan skor di bawah KKM yang memerlukan pembinaan/remedial.</p>
-                  
-                  <div className="space-y-3">
-                    {studentLeaderboard.bottom.length === 0 ? (
-                      <p className="text-xs text-emerald-600 bg-emerald-50/50 py-6 text-center rounded-lg border border-emerald-100 font-semibold flex flex-col items-center gap-1">
-                        <Check size={18} />
-                        <span>Seluruh siswa tuntas mencapai KKM!</span>
-                      </p>
-                    ) : (
-                      studentLeaderboard.bottom.map((session) => {
-                        const exam = exams.find(e => e.id === session.examId);
-                        const kkm = exam ? exam.kkm : 75;
-                        return (
-                          <div key={session.id} className="flex items-center justify-between p-2.5 bg-slate-50/50 rounded-lg border border-slate-100">
-                            <div>
-                              <p className="text-xs font-bold text-slate-950 leading-tight">{session.studentName}</p>
-                              <p className="text-[10px] text-slate-400 font-semibold">{session.className} • {session.subject}</p>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-xs font-extrabold text-rose-600 bg-rose-50 px-2 py-1 rounded">
-                                {session.finalScore}
-                              </span>
-                              <p className="text-[9px] text-slate-400 font-semibold mt-1">KKM: {kkm}</p>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
                   </div>
                 </div>
               </div>
@@ -2626,15 +2397,6 @@ export default function PortalGuru({
                   </div>
                 </div>
               )}
-
-              {/* Interactive Visualisation Analytics for Hasil Ujian */}
-              <ClassAnalyticsCharts 
-                exams={exams} 
-                studentSessions={studentSessions} 
-                classes={classes} 
-                initialClass={reportClass}
-                initialSubject={reportSubject}
-              />
 
               {/* Result Table */}
               {reportResults.length === 0 ? (
